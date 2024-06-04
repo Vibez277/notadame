@@ -5,8 +5,11 @@ import { useFoldersContext } from '@/components/contexts/FoldersContent'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
+import { NoFoldersFound } from '@/components/component/no-folders-found'
+import { FolderCard } from '../../_components/FolderCard'
+import { Folder } from '@/interfaces/misc_types'
 
-function Folder({params}:{params:{
+function SpecificFolder({params}:{params:{
     slug:string
 }}) {
   const fa = useFoldersContext();
@@ -23,9 +26,22 @@ function Folder({params}:{params:{
         <h1 className="text-xl font-bold text-center self-center">{fa?.folders.filter(f=>f._id===params.slug)[0].label}</h1>
       </div>
     </TopBar>
-    <div className='text-white'>Folder {params.slug}</div>
+    <div className="flex flex-grow border-2 rounded-md gap-3 p-4 flex-wrap overflow-y-auto overflow-x-hidden">
+        {fa?.folders?.length! <= 0 ? (
+          <NoFoldersFound />
+        ) : (
+          fa?.folders?.filter(f=>f.parent===params.slug).map((folder: Folder, index: number) => {
+            console.log(folder)
+            return (
+              (
+                <FolderCard key={index + folder._id} folder={folder} />
+              )
+            );
+          })
+        )}
+      </div>
     </>
   )
 }
 
-export default Folder
+export default SpecificFolder

@@ -5,6 +5,7 @@ export const folderCommonAggregation = () => {
       {
         $lookup:{
           from:"folders",
+          as:"subfolders",
           let:{
             subfolders:"$subfolders"
           },
