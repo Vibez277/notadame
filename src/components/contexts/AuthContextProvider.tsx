@@ -1,6 +1,6 @@
 "use client"
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { User } from '../../../interfaces/user_types';
+import { User } from '../../interfaces/user_types';
 import { useToast } from '../ui/use-toast';
 
 type authtype = {
@@ -62,7 +62,21 @@ function AuthContextProvider({children}:{children:React.ReactNode}) {
                 setIsAuthenticated(false);
                 setUser(null)
             }else{
+              const res = await fetch('/api/auth/profile',{
+                method:"GET",
+                headers:{
+                  "Authorization":"Bearer "+token
+                }
+              });
+              const data = await res.json();
+              console.log(data)
+              if(!data.success){
+                setIsAuthenticated(false);
+                setUser(null)
+              }else{
                 setIsAuthenticated(true)
+                setUser(data.user);
+              }
             }
         }
         authenticate();

@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import AuthContextProvider from "@/components/contexts/AuthContextProvider";
 import NavContextProvider from "@/components/contexts/NavContext";
+import ModalContextProvider from "@/components/contexts/ModalContextProvider";
+import FoldersContextProvider from "@/components/contexts/FoldersContent";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,8 +24,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthContextProvider>
           <NavContextProvider>
+            <ModalContextProvider>
+            <FoldersContextProvider>
             {children}
             <Toaster />
+            </FoldersContextProvider>
+            </ModalContextProvider>
           </NavContextProvider>
         </AuthContextProvider>
       </body>
