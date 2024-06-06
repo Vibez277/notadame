@@ -6,6 +6,7 @@ import AuthContextProvider from "@/components/contexts/AuthContextProvider";
 import NavContextProvider from "@/components/contexts/NavContext";
 import ModalContextProvider from "@/components/contexts/ModalContextProvider";
 import FoldersContextProvider from "@/components/contexts/FoldersContent";
+import NotesContextProvider from "@/components/contexts/NotesContextProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,10 +26,12 @@ export default function RootLayout({
         <AuthContextProvider>
           <NavContextProvider>
             <ModalContextProvider>
-            <FoldersContextProvider>
-            {children}
-            <Toaster />
-            </FoldersContextProvider>
+              <FoldersContextProvider>
+                <NotesContextProvider>
+                  {children}
+                  <Toaster />
+                </NotesContextProvider>
+              </FoldersContextProvider>
             </ModalContextProvider>
           </NavContextProvider>
         </AuthContextProvider>

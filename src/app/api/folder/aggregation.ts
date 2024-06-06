@@ -1,4 +1,3 @@
-import { pipeline } from "stream";
 
 export const folderCommonAggregation = () => {
     return [

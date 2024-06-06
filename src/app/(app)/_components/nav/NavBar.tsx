@@ -58,7 +58,7 @@ function NavBar() {
                         <DropdownMenuItem onClick={()=>mod?.setModalActive(true)}>
                             <Button variant={"ghost"} className='w-full text-white hover:text-slate-900'>Folder</Button>
                         </DropdownMenuItem>
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={()=>mod?.setNewNoteModalActive(true)}>
                             <Button variant={"ghost"} className='w-full text-white hover:text-slate-900'>Note</Button>
                         </DropdownMenuItem>
                     </DropdownMenuContent>

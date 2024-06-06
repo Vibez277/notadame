@@ -7,12 +7,20 @@ import { ArrowLeft } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { NoFoldersFound } from '@/components/component/no-folders-found'
 import { FolderCard } from '../../_components/FolderCard'
-import { Folder } from '@/interfaces/misc_types'
+import { Folder, Note } from '@/interfaces/misc_types'
+import NewNoteModal from '../../_components/NewNoteModal'
+import { NothingFound } from '@/components/component/nothing-was-found'
+import { useNotesContext } from '@/components/contexts/NotesContextProvider'
+import { NoteCard } from '../../_components/NoteCard'
+import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, ContextMenuTrigger } from '@/components/ui/context-menu'
+import { useModalContext } from '@/components/contexts/ModalContextProvider'
 
 function SpecificFolder({params}:{params:{
     slug:string
 }}) {
   const fa = useFoldersContext();
+  const no = useNotesContext();
+  const mod = useModalContext();
   const router = useRouter();
   return (
     <>
@@ -26,20 +34,44 @@ function SpecificFolder({params}:{params:{
         <h1 className="text-xl font-bold text-center self-center">{fa?.folders.filter(f=>f._id===params.slug)[0].label}</h1>
       </div>
     </TopBar>
-    <div className="flex flex-grow border-2 rounded-md gap-3 p-4 flex-wrap overflow-y-auto overflow-x-hidden">
-        {fa?.folders?.length! <= 0 ? (
-          <NoFoldersFound />
+    <ContextMenu>
+      <ContextMenuTrigger className='flex-grow flex'>
+    <div className="flex flex-grow relative border-2 rounded-md gap-3 p-4 flex-wrap overflow-y-auto overflow-x-hidden">
+        {fa?.folders?.filter(f=>f.parent===params.slug).length! <= 0 && no?.Notes?.filter((n:Note)=>n.folder===params.slug).length!<=0? (
+          <NothingFound />
         ) : (
-          fa?.folders?.filter(f=>f.parent===params.slug).map((folder: Folder, index: number) => {
-            console.log(folder)
+          <>
+          {fa?.folders?.length!>0&&fa?.folders?.filter(f=>f.parent===params.slug).map((folder: Folder, index: number) => {
             return (
               (
                 <FolderCard key={index + folder._id} folder={folder} />
               )
             );
-          })
-        )}
+          })}
+          {
+            no?.Notes.length!>0&&(
+              no?.Notes.filter(n=>n.folder===params.slug).map((note,index)=>(
+                <NoteCard note={note} key={index+note._id}/>
+              ))
+            )
+          }
+          </>)}
       </div>
+          </ContextMenuTrigger>
+        <ContextMenuContent>
+          <ContextMenuSub>
+            <ContextMenuSubTrigger>
+              New
+            </ContextMenuSubTrigger>
+            <ContextMenuSubContent>
+              <ContextMenuItem onClick={()=>mod?.setNewNoteModalActive(true)}>
+                Note
+              </ContextMenuItem>
+            </ContextMenuSubContent>
+          </ContextMenuSub>
+        </ContextMenuContent>
+      </ContextMenu>
+        <NewNoteModal/>
     </>
   )
 }
